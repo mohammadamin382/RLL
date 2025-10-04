@@ -179,6 +179,10 @@ class ChessEnv(gym.Env):
         self.move_count = 0
         return self._board_to_observation()
     
+    def get_action_mask(self) -> np.ndarray:
+        """Get current action mask for legal moves"""
+        return self._get_legal_moves_mask()
+    
     def step(self, action: int) -> Tuple[np.ndarray, float, bool, Dict]:
         """Execute one step"""
         # Convert action to move
@@ -192,6 +196,7 @@ class ChessEnv(gym.Env):
             reward = -10.0
             done = True
             info['invalid_action'] = True
+            info['action_mask'] = self._get_legal_moves_mask()
             return self._board_to_observation(), reward, done, info
         
         try:
@@ -202,6 +207,7 @@ class ChessEnv(gym.Env):
                 reward = -5.0
                 done = True
                 info['illegal_move'] = True
+                info['action_mask'] = self._get_legal_moves_mask()
                 return self._board_to_observation(), reward, done, info
             
             # Execute move
@@ -213,18 +219,21 @@ class ChessEnv(gym.Env):
                 reward = 100.0  # Win
                 done = True
                 info['checkmate'] = True
+                info['action_mask'] = self._get_legal_moves_mask()
                 return self._board_to_observation(), reward, done, info
             
             if self.board.is_stalemate() or self.board.is_insufficient_material():
                 reward = 0.0  # Draw
                 done = True
                 info['draw'] = True
+                info['action_mask'] = self._get_legal_moves_mask()
                 return self._board_to_observation(), reward, done, info
             
             if self.move_count >= self.max_moves:
                 reward = 0.0
                 done = True
                 info['max_moves'] = True
+                info['action_mask'] = self._get_legal_moves_mask()
                 return self._board_to_observation(), reward, done, info
             
             # Opponent move (supervised model or random)
@@ -250,12 +259,14 @@ class ChessEnv(gym.Env):
                 reward = -100.0  # Loss
                 done = True
                 info['opponent_checkmate'] = True
+                info['action_mask'] = self._get_legal_moves_mask()
                 return self._board_to_observation(), reward, done, info
             
             if self.board.is_stalemate() or self.board.is_insufficient_material():
                 reward = 0.0
                 done = True
                 info['draw'] = True
+                info['action_mask'] = self._get_legal_moves_mask()
                 return self._board_to_observation(), reward, done, info
             
             # Small positive reward for valid move
@@ -265,11 +276,15 @@ class ChessEnv(gym.Env):
             if self.board.is_check():
                 reward += 1.0
             
+            # Always add action mask for continuing games
+            info['action_mask'] = self._get_legal_moves_mask()
+            
         except Exception as e:
             logger.error(f"Error in step: {e}")
             reward = -10.0
             done = True
             info['error'] = str(e)
+            info['action_mask'] = self._get_legal_moves_mask()
         
         return self._board_to_observation(), reward, done, info
     
