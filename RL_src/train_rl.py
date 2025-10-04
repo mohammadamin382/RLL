@@ -23,7 +23,8 @@ from stable_baselines3.common.callbacks import (
     CheckpointCallback, EvalCallback, CallbackList
 )
 from stable_baselines3.common.monitor import Monitor
-
+import sys
+sys.path.append('/kaggle/input/okjjjkml/RLL-main')
 from RL_src.chess_env import ChessEnv
 from RL_src.ppo_policy import ChessFeatureExtractor, MaskedActorCriticPolicy
 
