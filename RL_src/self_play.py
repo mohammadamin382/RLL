@@ -12,7 +12,8 @@ import chess
 import numpy as np
 from stable_baselines3 import PPO
 import sys
-sys.path.append('/kaggle/input/okjjjkml/RLL-main')
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from RL_src.chess_env import ChessEnv
 
 logging.basicConfig(level=logging.INFO)
