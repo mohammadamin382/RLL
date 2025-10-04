@@ -1,0 +1,46 @@
+# RL Training Configuration (PPO)
+rl:
+  # Learning rate for PPO
+  learning_rate: 3.0e-4
+  
+  # Number of steps per environment per update
+  n_steps: 2048
+  
+  # Batch size for PPO updates (optimized for 2x T4)
+  batch_size: 512
+  
+  # Number of epochs for each PPO update
+  n_epochs: 10
+  
+  # Discount factor
+  gamma: 0.99
+  
+  # GAE lambda
+  gae_lambda: 0.95
+  
+  # PPO clipping parameter
+  clip_range: 0.2
+  
+  # Value function clipping (null = no clipping)
+  clip_range_vf: null
+  
+  # Entropy coefficient
+  ent_coef: 0.01
+  
+  # Value function coefficient
+  vf_coef: 0.5
+  
+  # Max gradient norm
+  max_grad_norm: 0.5
+  
+  # Target KL divergence
+  target_kl: 0.01
+  
+  # Number of parallel environments (2x T4 can handle 8-16)
+  n_parallel_envs: 12
+  
+  # Checkpoint frequency (in timesteps)
+  checkpoint_freq: 100000
+  
+  # Use supervised model as opponent
+  use_supervised_opponent: true
