@@ -23,11 +23,13 @@ from stable_baselines3.common.callbacks import (
     CheckpointCallback, EvalCallback, CallbackList
 )
 from stable_baselines3.common.monitor import Monitor
+
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from RL_src.chess_env import ChessEnv
 from RL_src.ppo_policy import ChessFeatureExtractor, MaskedActorCriticPolicy
+from RL_src.masked_env_wrapper import ActionMasker
 
 # Configure logging
 logging.basicConfig(
@@ -85,13 +87,14 @@ def configure_t4_gpus():
 
 def make_env(supervised_model_path: str, rank: int, use_supervised: bool = True):
     """
-    Create environment factory
+    Create environment factory with action masking
     """
     def _init():
         env = ChessEnv(
             supervised_model_path=supervised_model_path,
             use_supervised_policy=use_supervised
         )
+        env = ActionMasker(env)  # Wrap with action masker
         env = Monitor(env)
         return env
     return _init
