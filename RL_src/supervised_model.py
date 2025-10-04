@@ -150,9 +150,9 @@ class ChessBoardEncoder(nn.Module):
 class ChessTransformer(nn.Module):
     def __init__(
         self,
-        dim: int = 512,
-        depth: int = 12,
-        num_heads: int = 8,
+        dim: int = 768,
+        depth: int = 18,
+        num_heads: int = 12,
         dropout: float = 0.1,
         num_moves: int = 4672,
         use_flash_attention: bool = True,
