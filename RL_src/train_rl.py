@@ -24,7 +24,8 @@ from stable_baselines3.common.callbacks import (
 )
 from stable_baselines3.common.monitor import Monitor
 import sys
-sys.path.append('/kaggle/input/okjjjkml/RLL-main')
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from RL_src.chess_env import ChessEnv
 from RL_src.ppo_policy import ChessFeatureExtractor, MaskedActorCriticPolicy
 
